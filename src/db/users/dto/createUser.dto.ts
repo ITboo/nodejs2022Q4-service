@@ -4,10 +4,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
-  readonly login: string;
+  login: string;
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(3)
-  readonly password: string;
+  @MinLength(5)
+  password: string;
 }
