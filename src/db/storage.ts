@@ -1,6 +1,6 @@
-import { User } from './users/interfaces/user.interface';
-import { Artist } from './artists/artist';
-import { Album } from './albums/album';
+import { User } from './users/entities/user.entity';
+import { Artist } from './artists/entities/artist.entity';
+import { Album } from './albums/entities/album.entity';
 import { Track } from './tracks/track';
 import { Favorites } from './favorites/favorite';
 

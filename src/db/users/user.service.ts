@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { User } from './interfaces/user.interface';
+import { User } from './entities/user.entity';
 import { LocalDB } from '../storage';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class UsersService {
     }
   }
   async create(): Promise<User> {
-    return newUser;
+    return user;
   }
 
   async update(): Promise<User> {
