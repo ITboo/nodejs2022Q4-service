@@ -1,11 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
-
-import { Album } from '../albums/entities/album.entity';
-import { LocalDB } from '../storage';
-
 import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
+import { Album } from '../albums/entities/album.entity';
+import { LocalDB } from '../storage';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AlbumsService {

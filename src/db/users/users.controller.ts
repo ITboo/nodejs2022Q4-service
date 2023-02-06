@@ -1,4 +1,5 @@
 import {
+  Header,
   ParseUUIDPipe,
   Controller,
   Body,
@@ -9,8 +10,12 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  HttpException,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { validate } from 'uuid';
 
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
@@ -21,34 +26,51 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK) //200
+  @Header('Accept', 'application/json')
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK) //200
+  @Header('Accept', 'application/json')
   findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.usersService.findOne(id);
   }
 
+  @UsePipes(new ValidationPipe())
   @Post()
   @HttpCode(HttpStatus.CREATED) //201
+  @Header('Accept', 'application/json')
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
+  @UsePipes(new ValidationPipe())
   @Put(':id')
   @HttpCode(HttpStatus.OK) //200
+  @Header('Accept', 'application/json')
   update(
     @Param('id', new ParseUUIDPipe({ version: '4' }))
     id: string,
-    @Body() updatePasswordDto: UpdatePasswordDto,
+    @Body() { oldPassword, newPassword }: UpdatePasswordDto,
   ) {
-    return this.usersService.update(id, updatePasswordDto);
+    const user = this.findOne(id);
+    if (!oldPassword || !newPassword) {
+      throw new HttpException('Error', HttpStatus.BAD_REQUEST);
+    }
+    if (oldPassword !== user.password) {
+      throw new HttpException('Incorrect', HttpStatus.FORBIDDEN);
+    }
+    if (!validate(id)) {
+      throw new HttpException('Error', HttpStatus.NOT_FOUND);
+    }
+    return this.usersService.update(id, { oldPassword, newPassword });
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @Header('Accept', 'application/json')
   remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.usersService.remove(id);
   }

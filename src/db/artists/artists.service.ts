@@ -15,7 +15,7 @@ export class ArtistsService {
 
   findOne(id: string) {
     const artist = LocalDB.artists.find((item) => item.id === id);
-    if (artist === null) {
+    if (!artist) {
       throw new NotFoundException();
     } else {
       return artist;

@@ -15,7 +15,7 @@ export class TracksService {
 
   findOne(id: string) {
     const track = LocalDB.tracks.find((item) => item.id === id);
-    if (track === null) {
+    if (!track) {
       throw new NotFoundException();
     } else {
       return track;
