@@ -39,21 +39,21 @@ export class UsersService {
     return user;
   }
 
-  update(id: string, updateUserDto: UpdatePasswordDto) {
-    const user = this.findOne(id);
-    const index = LocalDB.users.indexOf(user);
-    if (!user) {
-      throw new NotFoundException(HttpStatus.NOT_FOUND);
+  update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
+    const user = LocalDB.users.find((item) => item.id === id);
+    if (user) {
+      if (user.password != oldPassword) {
+        throw new HttpException('Error', HttpStatus.FORBIDDEN);
+      }
+      const index = LocalDB.users.indexOf(user);
+      user.version++;
+      user.password = newPassword;
+      user.updatedAt = Date.now();
+      LocalDB.users[index] = user;
+      return user;
+    } else {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
-
-    if (user.password !== UpdatePasswordDto.oldPassword) {
-      throw new HttpException('Error', HttpStatus.FORBIDDEN);
-    }
-    user.version++;
-    user.password = updateUserDto.newPassword;
-    user.updatedAt = Date.now();
-    LocalDB.users[index] = user;
-    return user;
   }
 
   remove(id: string) {

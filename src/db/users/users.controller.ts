@@ -13,6 +13,8 @@ import {
   HttpException,
   UsePipes,
   ValidationPipe,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { validate } from 'uuid';
@@ -20,6 +22,7 @@ import { validate } from 'uuid';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -55,15 +58,18 @@ export class UsersController {
     id: string,
     @Body() { oldPassword, newPassword }: UpdatePasswordDto,
   ) {
-    const user = this.findOne(id);
+    const user = this.usersService.findOne(id);
+    if (!validate(id)) {
+      throw new HttpException('Error', HttpStatus.BAD_REQUEST);
+    }
+    if (!user) {
+      throw new HttpException('Error', HttpStatus.NOT_FOUND);
+    }
     if (!oldPassword || !newPassword) {
       throw new HttpException('Error', HttpStatus.BAD_REQUEST);
     }
     if (oldPassword !== user.password) {
       throw new HttpException('Incorrect', HttpStatus.FORBIDDEN);
-    }
-    if (!validate(id)) {
-      throw new HttpException('Error', HttpStatus.NOT_FOUND);
     }
     return this.usersService.update(id, { oldPassword, newPassword });
   }
