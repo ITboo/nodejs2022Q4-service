@@ -18,6 +18,7 @@ import { validate } from 'uuid';
 
 import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
+import { BAD_REQUEST } from 'src/common/error';
 
 @Controller('album')
 export class AlbumsController {
@@ -49,7 +50,7 @@ export class AlbumsController {
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
     if (!validate(id)) {
-      throw new HttpException('Error', HttpStatus.BAD_REQUEST);
+      throw new HttpException(BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }
     return this.albumsService.update(id, updateAlbumDto);
   }

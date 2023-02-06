@@ -19,6 +19,7 @@ import { validate } from 'uuid';
 
 import { CreateArtistDto } from './dto/createArtist.dto';
 import { UpdateArtistDto } from './dto/updateArtist.dto';
+import { BAD_REQUEST } from 'src/common/error';
 
 @Controller('artist')
 export class ArtistsController {
@@ -55,7 +56,7 @@ export class ArtistsController {
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
     if (!validate(id)) {
-      throw new HttpException('Error', HttpStatus.BAD_REQUEST);
+      throw new HttpException(BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }
     return this.artistsService.update(id, updateArtistDto);
   }

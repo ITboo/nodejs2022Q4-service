@@ -10,6 +10,12 @@ import { IFavouritesResponse } from './entities/favorite.interface';
 import { AlbumsService } from '../albums/albums.service';
 import { ArtistsService } from '../artists/artists.service';
 import { TracksService } from '../tracks/tracks.service';
+import {
+  ALBUM_NOT_FOUND,
+  ARTIST_NOT_FOUND,
+  ERR,
+  TRACK_NOT_FOUND,
+} from 'src/common/error';
 
 @Injectable()
 export class FavoritesService {
@@ -39,16 +45,16 @@ export class FavoritesService {
     try {
       this.albumsService.findOne(id);
       LocalDB.favourites.albums.push(id);
-    } catch (e) {
-      throw new UnprocessableEntityException();
+    } catch (err) {
+      throw new UnprocessableEntityException(ERR);
     }
   }
   addTrack(id: string) {
     try {
       this.tracksService.findOne(id);
       LocalDB.favourites.tracks.push(id);
-    } catch (e) {
-      throw new UnprocessableEntityException();
+    } catch (err) {
+      throw new UnprocessableEntityException(ERR);
     }
   }
 
@@ -56,8 +62,8 @@ export class FavoritesService {
     try {
       this.artistsService.findOne(id);
       LocalDB.favourites.artists.push(id);
-    } catch (e) {
-      throw new UnprocessableEntityException();
+    } catch (err) {
+      throw new UnprocessableEntityException(ERR);
     }
   }
 
@@ -68,7 +74,7 @@ export class FavoritesService {
         (item) => item !== id,
       );
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException(ALBUM_NOT_FOUND);
     }
   }
 
@@ -79,7 +85,7 @@ export class FavoritesService {
         (item) => item !== id,
       );
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException(ARTIST_NOT_FOUND);
     }
   }
 
@@ -90,7 +96,7 @@ export class FavoritesService {
         (item) => item !== id,
       );
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException(TRACK_NOT_FOUND);
     }
   }
 }

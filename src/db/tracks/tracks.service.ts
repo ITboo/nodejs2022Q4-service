@@ -6,6 +6,7 @@ import { LocalDB } from '../storage';
 
 import { CreateTrackDto } from './dto/createTrack.dto';
 import { UpdateTrackDto } from './dto/updateTrack.dto';
+import { TRACK_NOT_FOUND } from 'src/common/error';
 
 @Injectable()
 export class TracksService {
@@ -16,7 +17,7 @@ export class TracksService {
   findOne(id: string) {
     const track = LocalDB.tracks.find((item) => item.id === id);
     if (!track) {
-      throw new NotFoundException();
+      throw new NotFoundException(TRACK_NOT_FOUND);
     } else {
       return track;
     }

@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ARTIST_NOT_FOUND } from 'src/common/error';
 import { v4 as uuid } from 'uuid';
 
 import { Artist } from '../artists/entities/artist.entity';
@@ -16,7 +17,7 @@ export class ArtistsService {
   findOne(id: string) {
     const artist = LocalDB.artists.find((item) => item.id === id);
     if (!artist) {
-      throw new NotFoundException();
+      throw new NotFoundException(ARTIST_NOT_FOUND);
     } else {
       return artist;
     }

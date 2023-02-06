@@ -19,6 +19,7 @@ import { validate } from 'uuid';
 
 import { CreateTrackDto } from './dto/createTrack.dto';
 import { UpdateTrackDto } from './dto/updateTrack.dto';
+import { BAD_REQUEST } from 'src/common/error';
 
 @Controller('track')
 export class TracksController {
@@ -55,7 +56,7 @@ export class TracksController {
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
     if (!validate(id)) {
-      throw new HttpException('Error', HttpStatus.BAD_REQUEST);
+      throw new HttpException(BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }
     return this.tracksService.update(id, updateTrackDto);
   }

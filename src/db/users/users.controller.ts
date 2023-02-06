@@ -21,6 +21,12 @@ import { validate } from 'uuid';
 
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
+import {
+  BAD_REQUEST,
+  INVALID_OLD_PASSWORD,
+  INVALID_PASSWORD,
+  USER_NOT_FOUND,
+} from 'src/common/error';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
@@ -60,16 +66,16 @@ export class UsersController {
   ) {
     const user = this.usersService.findOne(id);
     if (!validate(id)) {
-      throw new HttpException('Error', HttpStatus.BAD_REQUEST);
+      throw new HttpException(BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }
     if (!user) {
-      throw new HttpException('Error', HttpStatus.NOT_FOUND);
+      throw new HttpException(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     if (!oldPassword || !newPassword) {
-      throw new HttpException('Error', HttpStatus.BAD_REQUEST);
+      throw new HttpException(INVALID_OLD_PASSWORD, HttpStatus.BAD_REQUEST);
     }
     if (oldPassword !== user.password) {
-      throw new HttpException('Incorrect', HttpStatus.FORBIDDEN);
+      throw new HttpException(INVALID_PASSWORD, HttpStatus.FORBIDDEN);
     }
     return this.usersService.update(id, { oldPassword, newPassword });
   }

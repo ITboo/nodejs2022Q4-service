@@ -4,6 +4,7 @@ import { UpdateAlbumDto } from './dto/updateAlbum.dto';
 import { Album } from '../albums/entities/album.entity';
 import { LocalDB } from '../storage';
 import { v4 as uuid } from 'uuid';
+import { ALBUM_NOT_FOUND } from 'src/common/error';
 
 @Injectable()
 export class AlbumsService {
@@ -14,7 +15,7 @@ export class AlbumsService {
   findOne(id: string) {
     const album = LocalDB.albums.find((item) => item.id === id);
     if (!album) {
-      throw new NotFoundException();
+      throw new NotFoundException(ALBUM_NOT_FOUND);
     } else {
       return album;
     }
