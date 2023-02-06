@@ -4,6 +4,7 @@ Welcome to a Home Library Service! Users can create, read, update, delete data a
 REST endpoints with separate router paths were created for Users, Artists, Albums, Tracks and Favorites;
 
 Service listens on PORT 4000 by default, PORT value is stored in .env file.
+https://github.com/ITboo/nodejs2022Q4-service/blob/a749285fd75d023a40922346fe88ed22124cb042/.env.example#L1
 
 
 ## Downloading
