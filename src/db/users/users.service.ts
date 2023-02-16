@@ -12,14 +12,22 @@ import { LocalDB } from '../storage';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
+
   findAll() {
-    return LocalDB.users;
+    return this.userRepository.find();
   }
 
   findOne(id: string) {
-    const user = LocalDB.users.find((item) => item.id === id);
+    const user = this.userRepository.find({ where: { id } });
     if (!user) {
       throw new NotFoundException(HttpStatus.NOT_FOUND);
     } else {
@@ -35,8 +43,8 @@ export class UsersService {
     user.version = 1;
     user.createdAt = new Date().getTime();
     user.updatedAt = new Date().getTime();
-    LocalDB.users.push(user);
-    return user;
+    this.userRepository.create(user);
+    return this.userRepository.save(user);
   }
 
   update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
@@ -59,7 +67,7 @@ export class UsersService {
   remove(id: string) {
     const user = this.findOne(id);
     if (user) {
-      LocalDB.users = LocalDB.users.filter((item) => item.id !== id);
+      this.userRepository.delete(id);
     }
   }
 }
