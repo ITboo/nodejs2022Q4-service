@@ -18,11 +18,11 @@ export class AlbumsService {
     private trackRepository: Repository<Track>,
   ) {}
 
-  findAll() {
+  async findAll() {
     return this.albumRepository.find();
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     const album = this.albumRepository.findOne({ where: { id } });
     if (!album) {
       throw new NotFoundException(ALBUM_NOT_FOUND);
@@ -31,7 +31,7 @@ export class AlbumsService {
     }
   }
 
-  create(createAlbumDto: CreateAlbumDto) {
+  async create(createAlbumDto: CreateAlbumDto) {
     const album = new Album();
     album.id = uuid();
     album.name = createAlbumDto.name;
@@ -40,7 +40,7 @@ export class AlbumsService {
     return this.albumRepository.save(album);
   }
 
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
     const album = this.findOne(id);
     //const index = LocalDB.albums.indexOf(album);
     album.name = updateAlbumDto.name;
@@ -50,7 +50,7 @@ export class AlbumsService {
     return album;
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     const album = this.findOne(id);
     if (album) {
       this.albumRepository.delete(id);

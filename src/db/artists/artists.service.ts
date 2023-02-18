@@ -26,11 +26,11 @@ export class ArtistsService {
     private albumRepository: Repository<Album>,
   ) {}
 
-  findAll() {
+  async findAll() {
     return this.artistRepository.find();
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     const artist = this.artistRepository.findOne({ where: { id } });
     if (!artist) {
       throw new NotFoundException(ARTIST_NOT_FOUND);
@@ -39,7 +39,7 @@ export class ArtistsService {
     }
   }
 
-  create(createArtistDto: CreateArtistDto) {
+  async create(createArtistDto: CreateArtistDto) {
     const artist = new Artist();
     artist.id = uuid();
     artist.name = createArtistDto.name;
@@ -47,7 +47,7 @@ export class ArtistsService {
     return this.artistRepository.save(artist);
   }
 
-  update(id: string, updateArtistDto: UpdateArtistDto) {
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
     const artist = this.findOne(id);
     //const index = LocalDB.artists.indexOf(artist);
     artist.name = updateArtistDto.name;
@@ -55,7 +55,7 @@ export class ArtistsService {
     return this.artistRepository.save(artist);
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     const artist = this.findOne(id);
     if (artist) {
       this.artistRepository.delete(id);

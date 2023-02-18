@@ -22,12 +22,12 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  findAll() {
-    return this.userRepository.find();
+  async findAll() {
+    return await this.userRepository.find();
   }
 
-  findOne(id: string) {
-    const user = this.userRepository.find({ where: { id } });
+  async findOne(id: string) {
+    const user = await this.userRepository.find({ where: { id } });
     if (!user) {
       throw new NotFoundException(HttpStatus.NOT_FOUND);
     } else {
@@ -35,7 +35,7 @@ export class UsersService {
     }
   }
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     const user = new User();
     user.id = uuid();
     user.login = createUserDto.login;
@@ -44,30 +44,28 @@ export class UsersService {
     user.createdAt = new Date().getTime();
     user.updatedAt = new Date().getTime();
     this.userRepository.create(user);
-    return this.userRepository.save(user);
+    return await this.userRepository.save(user);
   }
 
-  update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
-    const user = LocalDB.users.find((item) => item.id === id);
+  async update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
+    const user = await this.findOne(id);
     if (user) {
       if (user.password != oldPassword) {
         throw new HttpException('Error', HttpStatus.FORBIDDEN);
       }
-      const index = LocalDB.users.indexOf(user);
       user.version++;
       user.password = newPassword;
       user.updatedAt = Date.now();
-      LocalDB.users[index] = user;
       return user;
     } else {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
   }
 
-  remove(id: string) {
-    const user = this.findOne(id);
+  async remove(id: string) {
+    const user = await this.findOne(id);
     if (user) {
-      this.userRepository.delete(id);
+      await this.userRepository.delete(id);
     }
   }
 }

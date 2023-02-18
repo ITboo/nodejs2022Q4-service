@@ -28,21 +28,21 @@ export class TracksController {
   @Get()
   @HttpCode(HttpStatus.OK) //200
   @Header('Accept', 'application/json')
-  findAll() {
+  async findAll() {
     return this.tracksService.findAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK) //200
   @Header('Accept', 'application/json')
-  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.tracksService.findOne(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED) //201
   @Header('Accept', 'application/json')
-  create(@Body() createTrackDto: CreateTrackDto) {
+  async create(@Body() createTrackDto: CreateTrackDto) {
     return this.tracksService.create(createTrackDto);
   }
 
@@ -50,7 +50,7 @@ export class TracksController {
   @Put(':id')
   @HttpCode(HttpStatus.OK) //200
   @Header('Accept', 'application/json')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe({ version: '4' }))
     id: string,
     @Body() updateTrackDto: UpdateTrackDto,
@@ -64,7 +64,7 @@ export class TracksController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @Header('Accept', 'application/json')
-  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     this.tracksService.remove(id);
   }
 }

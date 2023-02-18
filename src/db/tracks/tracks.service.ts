@@ -18,12 +18,12 @@ export class TracksService {
     private trackRepository: Repository<Track>,
   ) {}
 
-  findAll() {
-    return this.trackRepository.find();
+  async findAll() {
+    return await this.trackRepository.find();
   }
 
-  findOne(id: string) {
-    const track = this.trackRepository.findOne({ where: { id } });
+  async findOne(id: string) {
+    const track = await this.trackRepository.findOne({ where: { id } });
     if (!track) {
       throw new NotFoundException(TRACK_NOT_FOUND);
     } else {
@@ -31,29 +31,29 @@ export class TracksService {
     }
   }
 
-  create(createTrackDto: CreateTrackDto) {
+  async create(createTrackDto: CreateTrackDto) {
     const track = new Track();
     track.id = uuid();
     track.name = createTrackDto.name;
     track.duration = createTrackDto.duration;
     track.artistId = createTrackDto.artistId || null;
     track.albumId = createTrackDto.albumId || null;
-    return this.trackRepository.save(track);
+    return await this.trackRepository.save(track);
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
     const track = this.findOne(id);
     //const index = LocalDB.tracks.indexOf(track);
     track.name = updateTrackDto.name;
     track.duration = updateTrackDto.duration;
     track.artistId = updateTrackDto.artistId || null;
     track.albumId = updateTrackDto.albumId || null;
-   // LocalDB.tracks[index] = track;
-    return this.trackRepository.save(track);
+    // LocalDB.tracks[index] = track;
+    return await this.trackRepository.save(track);
   }
 
-  remove(id: string) {
-    const track = this.findOne(id);
-    if (track) this.trackRepository.delete(id);
+  async remove(id: string) {
+    const track = await this.findOne(id);
+    if (track) await this.trackRepository.delete(id);
   }
 }
