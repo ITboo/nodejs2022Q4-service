@@ -65,6 +65,6 @@ export class TracksController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Header('Accept', 'application/json')
   remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.tracksService.remove(id);
+    this.tracksService.remove(id);
   }
 }
