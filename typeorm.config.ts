@@ -6,6 +6,7 @@ import { DataSource } from 'typeorm';
 const AppDataSource = new DataSource({
   ...CONNECTION,
   entities: ['*/**/*.entity.ts'],
+  //  migrations:['/dist/']
 });
 
 AppDataSource.initialize()
