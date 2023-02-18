@@ -7,7 +7,6 @@ import {
 import { v4 as uuid } from 'uuid';
 
 import { User } from './entities/user.entity';
-import { LocalDB } from '../storage';
 
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';

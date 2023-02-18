@@ -64,7 +64,7 @@ export class UsersController {
     id: string,
     @Body() { oldPassword, newPassword }: UpdatePasswordDto,
   ) {
-    const user = this.usersService.findOne(id);
+    const user = await this.usersService.findOne(id);
     if (!validate(id)) {
       throw new HttpException(BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }

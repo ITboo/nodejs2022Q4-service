@@ -3,7 +3,6 @@ import { ARTIST_NOT_FOUND } from 'src/common/error';
 import { v4 as uuid } from 'uuid';
 
 import { Artist } from '../artists/entities/artist.entity';
-import { LocalDB } from '../storage';
 
 import { CreateArtistDto } from './dto/createArtist.dto';
 import { UpdateArtistDto } from './dto/updateArtist.dto';
@@ -11,7 +10,6 @@ import { UpdateArtistDto } from './dto/updateArtist.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { User } from '../users/entities/user.entity';
 import { Track } from '../tracks/entities/track.entity';
 import { Album } from '../albums/entities/album.entity';
 
@@ -48,11 +46,10 @@ export class ArtistsService {
   }
 
   async update(id: string, updateArtistDto: UpdateArtistDto) {
-    const artist = this.findOne(id);
-    //const index = LocalDB.artists.indexOf(artist);
+    const artist = await this.findOne(id);
     artist.name = updateArtistDto.name;
     artist.grammy = updateArtistDto.grammy;
-    return this.artistRepository.save(artist);
+    return await this.artistRepository.save(artist);
   }
 
   async remove(id: string) {

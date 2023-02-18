@@ -41,13 +41,11 @@ export class AlbumsService {
   }
 
   async update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    const album = this.findOne(id);
-    //const index = LocalDB.albums.indexOf(album);
+    const album = await this.findOne(id);
     album.name = updateAlbumDto.name;
     album.year = updateAlbumDto.year;
     album.artistId = updateAlbumDto.artistId;
-    return this.albumRepository.save(album);
-    return album;
+    return await this.albumRepository.save(album);
   }
 
   async remove(id: string) {

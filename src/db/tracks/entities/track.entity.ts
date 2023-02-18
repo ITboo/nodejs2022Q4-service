@@ -12,20 +12,24 @@ import { Album } from '../../albums/entities/album.entity';
 export class Track {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
   @Column()
   name: string;
+
   @ManyToOne(() => Artist, (Artist) => Artist.id, {
     nullable: true,
     onDelete: 'SET NULL',
   })
   @JoinColumn()
   artistId: string | null;
+
   @ManyToOne(() => Album, (Album) => Album.id, {
     nullable: true,
     onDelete: 'SET NULL',
   })
   @JoinColumn()
   albumId: string | null;
+
   @Column()
   duration: number;
 }

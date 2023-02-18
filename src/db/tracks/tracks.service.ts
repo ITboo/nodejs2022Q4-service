@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 
 import { Track } from '../tracks/entities/track.entity';
-import { LocalDB } from '../storage';
 
 import { CreateTrackDto } from './dto/createTrack.dto';
 import { UpdateTrackDto } from './dto/updateTrack.dto';
@@ -42,13 +41,11 @@ export class TracksService {
   }
 
   async update(id: string, updateTrackDto: UpdateTrackDto) {
-    const track = this.findOne(id);
-    //const index = LocalDB.tracks.indexOf(track);
+    const track = await this.findOne(id);
     track.name = updateTrackDto.name;
     track.duration = updateTrackDto.duration;
     track.artistId = updateTrackDto.artistId || null;
     track.albumId = updateTrackDto.albumId || null;
-    // LocalDB.tracks[index] = track;
     return await this.trackRepository.save(track);
   }
 
