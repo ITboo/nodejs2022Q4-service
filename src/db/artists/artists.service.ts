@@ -8,14 +8,30 @@ import { LocalDB } from '../storage';
 import { CreateArtistDto } from './dto/createArtist.dto';
 import { UpdateArtistDto } from './dto/updateArtist.dto';
 
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { User } from '../users/entities/user.entity';
+import { Track } from '../tracks/entities/track.entity';
+import { Album } from '../albums/entities/album.entity';
+
 @Injectable()
 export class ArtistsService {
+  constructor(
+    @InjectRepository(Artist)
+    private artistRepository: Repository<Artist>,
+    @InjectRepository(Track)
+    private trackRepository: Repository<Track>,
+    @InjectRepository(Album)
+    private albumRepository: Repository<Album>,
+  ) {}
+
   findAll() {
-    return LocalDB.artists;
+    return this.artistRepository.find();
   }
 
   findOne(id: string) {
-    const artist = LocalDB.artists.find((item) => item.id === id);
+    const artist = this.artistRepository.findOne({ where: { id } });
     if (!artist) {
       throw new NotFoundException(ARTIST_NOT_FOUND);
     } else {
@@ -28,28 +44,21 @@ export class ArtistsService {
     artist.id = uuid();
     artist.name = createArtistDto.name;
     artist.grammy = createArtistDto.grammy;
-    LocalDB.artists.push(artist);
-    return artist;
+    return this.artistRepository.save(artist);
   }
 
   update(id: string, updateArtistDto: UpdateArtistDto) {
     const artist = this.findOne(id);
-    const index = LocalDB.artists.indexOf(artist);
+    //const index = LocalDB.artists.indexOf(artist);
     artist.name = updateArtistDto.name;
     artist.grammy = updateArtistDto.grammy;
-    LocalDB.artists[index] = artist;
-    return artist;
+    return this.artistRepository.save(artist);
   }
 
   remove(id: string) {
     const artist = this.findOne(id);
     if (artist) {
-      LocalDB.artists = LocalDB.artists.filter((item) => item.id !== id);
-      LocalDB.tracks.forEach((track) => {
-        if (track.artistId === id) {
-          track.artistId = null;
-        }
-      });
+      this.artistRepository.delete(id);
     }
   }
 }
