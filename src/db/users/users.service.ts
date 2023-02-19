@@ -21,12 +21,12 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findAll() {
+  async findAll(): Promise<User[]> {
     return await this.userRepository.find();
   }
 
-  async findOne(id: string) {
-    const user = await this.userRepository.find({ where: { id } });
+  async findOne(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(HttpStatus.NOT_FOUND);
     } else {
@@ -34,7 +34,7 @@ export class UsersService {
     }
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User();
     user.id = uuid();
     user.login = createUserDto.login;
@@ -46,14 +46,14 @@ export class UsersService {
     return await this.userRepository.save(user);
   }
 
-  async update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
+  async update(id: string, updateDto: UpdatePasswordDto): Promise<User> {
     const user = await this.findOne(id);
     if (user) {
-      if (user.password != oldPassword) {
+      if (user.password != updateDto.oldPassword) {
         throw new HttpException('Error', HttpStatus.FORBIDDEN);
       }
       user.version++;
-      user.password = newPassword;
+      user.password = updateDto.newPassword;
       user.updatedAt = Date.now();
       return user;
     } else {
@@ -61,7 +61,7 @@ export class UsersService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<void> {
     const user = await this.findOne(id);
     if (user) {
       await this.userRepository.delete(id);
