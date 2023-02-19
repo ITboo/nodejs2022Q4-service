@@ -13,11 +13,19 @@ https://github.com/ITboo/nodejs2022Q4-service/blob/a749285fd75d023a40922346fe88e
 git clone https://github.com/ITboo/nodejs2022Q4-service.git
 ```
 
+## Change branch
+
+```
+cd nodejs2022Q4-service
+```
+
 ## Installing NPM modules
 
 ```
 npm install
 ```
+
+## Rename .env.example file with .env
 
 ## Running application
 
@@ -39,15 +47,13 @@ To run only one of all test suites
 npm run test -- <path to suite>
 ```
 
-To run all test with authorization
+## Docker
 
 ```
-npm run test:auth
+npm run docker
 ```
-
-To run only specific test suite with authorization
+! If you have some errors after running Docker, you may try to clean cache by using
 
 ```
-npm run test:auth -- <path to suite>
+docker builder prune -a
 ```
-

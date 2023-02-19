@@ -23,6 +23,6 @@ export class Album {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  @JoinColumn() // refers to Artist
+  @JoinColumn()
   artistId: string | null;
 }

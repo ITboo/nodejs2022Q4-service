@@ -23,6 +23,6 @@ async function bootstrap() {
   const docApi = parse(api);
   SwaggerModule.setup('doc', app, docApi);
 
-  await app.listen(PORT, () => console.log('Server started on port' + PORT));
+  await app.listen(PORT, () => console.log('Server started on port ' + PORT));
 }
 bootstrap();
