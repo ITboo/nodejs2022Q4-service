@@ -1,7 +1,8 @@
-FROM node:18
+FROM node:18.14.0-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+COPY package.json .
+COPY package-lock.json .
+RUN npm install --cache clean --force
 COPY . .
 CMD [ "npm", "run", "start:dev" ]
-EXPOSE 3000
+EXPOSE ${PORT}

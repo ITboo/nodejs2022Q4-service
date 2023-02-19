@@ -52,7 +52,7 @@ npm run test -- <path to suite>
 ```
 npm run docker
 ```
-! If you have some errors after running Docker, you may try to clean cache by using
+! If you have some errors bringing up the project after running Docker, you may try to clean cache by using
 
 ```
 docker builder prune -a
