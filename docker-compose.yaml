@@ -14,7 +14,7 @@ services:
       - .env
     restart: always
     volumes:
-      - ./src:/app/src
+      - ./:/app
 
   postgres:
     container_name: db-postgres

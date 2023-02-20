@@ -1,12 +1,17 @@
-import { CONNECTION } from 'src/app/db.connection';
+import { CONNECTION } from './src/app/db.connection';
 import { DataSource } from 'typeorm';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
+
+console.log('Connection to ' + process.env.POSTGRES_DB);
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 const AppDataSource = new DataSource({
   ...CONNECTION,
   entities: ['*/**/*.entity.ts'],
-  //  migrations:['/dist/']
+  synchronize: true,
+  migrations: ['src/migrations/auto/*.ts'],
 });
 
 AppDataSource.initialize()

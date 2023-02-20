@@ -20,7 +20,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "scan:node": "docker scan node"
+    "scan:node": "docker scan node",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:generate": "npm run typeorm -- -d typeorm.config.ts migration:generate ./src/migrations/auto",
+    "migration:create": "npm run typeorm migration:create ./src/migrations/auto",
+    "migration:run": "npm run typeorm migration:run -- -d ./typeorm.config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
