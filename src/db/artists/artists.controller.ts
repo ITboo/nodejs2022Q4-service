@@ -28,29 +28,29 @@ export class ArtistsController {
   @Get()
   @HttpCode(HttpStatus.OK) //200
   @Header('Accept', 'application/json')
-  findAll() {
-    return this.artistsService.findAll();
+  async findAll() {
+    return await this.artistsService.findAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK) //200
   @Header('Accept', 'application/json')
-  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.artistsService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return await this.artistsService.findOne(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED) //201
   @Header('Accept', 'application/json')
-  create(@Body() createArtistDto: CreateArtistDto) {
-    return this.artistsService.create(createArtistDto);
+  async create(@Body() createArtistDto: CreateArtistDto) {
+    return await this.artistsService.create(createArtistDto);
   }
 
   @UsePipes(new ValidationPipe())
   @Put(':id')
   @Header('Accept', 'application/json')
   @HttpCode(HttpStatus.OK) //200
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe({ version: '4' }))
     id: string,
     @Body() updateArtistDto: UpdateArtistDto,
@@ -58,13 +58,13 @@ export class ArtistsController {
     if (!validate(id)) {
       throw new HttpException(BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }
-    return this.artistsService.update(id, updateArtistDto);
+    return await this.artistsService.update(id, updateArtistDto);
   }
 
   @Delete(':id')
   @Header('Accept', 'application/json')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.artistsService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return await this.artistsService.remove(id);
   }
 }

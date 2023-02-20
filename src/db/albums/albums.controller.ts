@@ -26,38 +26,38 @@ export class AlbumsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll() {
-    return this.albumsService.findAll();
+  async findAll() {
+    return await this.albumsService.findAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.albumsService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return await this.albumsService.findOne(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createAlbumDto: CreateAlbumDto) {
-    return this.albumsService.create(createAlbumDto);
+  async create(@Body() createAlbumDto: CreateAlbumDto) {
+    return await this.albumsService.create(createAlbumDto);
   }
 
   @UsePipes(new ValidationPipe())
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
     if (!validate(id)) {
       throw new HttpException(BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }
-    return this.albumsService.update(id, updateAlbumDto);
+    return await this.albumsService.update(id, updateAlbumDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.albumsService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return await this.albumsService.remove(id);
   }
 }

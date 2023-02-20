@@ -7,19 +7,26 @@ import {
 import { v4 as uuid } from 'uuid';
 
 import { User } from './entities/user.entity';
-import { LocalDB } from '../storage';
 
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 @Injectable()
 export class UsersService {
-  findAll() {
-    return LocalDB.users;
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
+
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 
-  findOne(id: string) {
-    const user = LocalDB.users.find((item) => item.id === id);
+  async findOne(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(HttpStatus.NOT_FOUND);
     } else {
@@ -27,7 +34,7 @@ export class UsersService {
     }
   }
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User();
     user.id = uuid();
     user.login = createUserDto.login;
@@ -35,31 +42,29 @@ export class UsersService {
     user.version = 1;
     user.createdAt = new Date().getTime();
     user.updatedAt = new Date().getTime();
-    LocalDB.users.push(user);
-    return user;
+    this.userRepository.create(user);
+    return await this.userRepository.save(user);
   }
 
-  update(id: string, { oldPassword, newPassword }: UpdatePasswordDto) {
-    const user = LocalDB.users.find((item) => item.id === id);
+  async update(id: string, updateDto: UpdatePasswordDto): Promise<User> {
+    const user = await this.findOne(id);
     if (user) {
-      if (user.password != oldPassword) {
+      if (user.password != updateDto.oldPassword) {
         throw new HttpException('Error', HttpStatus.FORBIDDEN);
       }
-      const index = LocalDB.users.indexOf(user);
       user.version++;
-      user.password = newPassword;
+      user.password = updateDto.newPassword;
       user.updatedAt = Date.now();
-      LocalDB.users[index] = user;
       return user;
     } else {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
   }
 
-  remove(id: string) {
-    const user = this.findOne(id);
+  async remove(id: string): Promise<void> {
+    const user = await this.findOne(id);
     if (user) {
-      LocalDB.users = LocalDB.users.filter((item) => item.id !== id);
+      await this.userRepository.delete(id);
     }
   }
 }

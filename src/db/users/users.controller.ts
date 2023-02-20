@@ -10,23 +10,15 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  HttpException,
   UsePipes,
   ValidationPipe,
   ClassSerializerInterceptor,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { validate } from 'uuid';
 
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
-import {
-  BAD_REQUEST,
-  INVALID_OLD_PASSWORD,
-  INVALID_PASSWORD,
-  USER_NOT_FOUND,
-} from 'src/common/error';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
@@ -36,14 +28,14 @@ export class UsersController {
   @Get()
   @HttpCode(HttpStatus.OK) //200
   @Header('Accept', 'application/json')
-  findAll() {
+  async findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK) //200
   @Header('Accept', 'application/json')
-  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.usersService.findOne(id);
   }
 
@@ -51,7 +43,7 @@ export class UsersController {
   @Post()
   @HttpCode(HttpStatus.CREATED) //201
   @Header('Accept', 'application/json')
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
@@ -59,31 +51,18 @@ export class UsersController {
   @Put(':id')
   @HttpCode(HttpStatus.OK) //200
   @Header('Accept', 'application/json')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe({ version: '4' }))
     id: string,
     @Body() { oldPassword, newPassword }: UpdatePasswordDto,
   ) {
-    const user = this.usersService.findOne(id);
-    if (!validate(id)) {
-      throw new HttpException(BAD_REQUEST, HttpStatus.BAD_REQUEST);
-    }
-    if (!user) {
-      throw new HttpException(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
-    if (!oldPassword || !newPassword) {
-      throw new HttpException(INVALID_OLD_PASSWORD, HttpStatus.BAD_REQUEST);
-    }
-    if (oldPassword !== user.password) {
-      throw new HttpException(INVALID_PASSWORD, HttpStatus.FORBIDDEN);
-    }
     return this.usersService.update(id, { oldPassword, newPassword });
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @Header('Accept', 'application/json')
-  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.usersService.remove(id);
   }
 }

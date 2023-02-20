@@ -6,9 +6,18 @@ import { AlbumsModule } from 'src/db/albums/albums.module';
 import { FavoritesModule } from 'src/db/favorites/favorites.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CONNECTION } from './db.connection';
 
 @Module({
   imports: [
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    TypeOrmModule.forRoot({
+      ...CONNECTION,
+      entities: [],
+      synchronize: true,
+    }),
     UsersModule,
     ArtistsModule,
     TracksModule,

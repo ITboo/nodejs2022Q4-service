@@ -3,19 +3,33 @@ import { ARTIST_NOT_FOUND } from 'src/common/error';
 import { v4 as uuid } from 'uuid';
 
 import { Artist } from '../artists/entities/artist.entity';
-import { LocalDB } from '../storage';
 
 import { CreateArtistDto } from './dto/createArtist.dto';
 import { UpdateArtistDto } from './dto/updateArtist.dto';
 
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Track } from '../tracks/entities/track.entity';
+import { Album } from '../albums/entities/album.entity';
+
 @Injectable()
 export class ArtistsService {
-  findAll() {
-    return LocalDB.artists;
+  constructor(
+    @InjectRepository(Artist)
+    private artistRepository: Repository<Artist>,
+    @InjectRepository(Track)
+    private trackRepository: Repository<Track>,
+    @InjectRepository(Album)
+    private albumRepository: Repository<Album>,
+  ) {}
+
+  async findAll() {
+    return this.artistRepository.find();
   }
 
-  findOne(id: string) {
-    const artist = LocalDB.artists.find((item) => item.id === id);
+  async findOne(id: string) {
+    const artist = this.artistRepository.findOne({ where: { id } });
     if (!artist) {
       throw new NotFoundException(ARTIST_NOT_FOUND);
     } else {
@@ -23,33 +37,25 @@ export class ArtistsService {
     }
   }
 
-  create(createArtistDto: CreateArtistDto) {
+  async create(createArtistDto: CreateArtistDto) {
     const artist = new Artist();
     artist.id = uuid();
     artist.name = createArtistDto.name;
     artist.grammy = createArtistDto.grammy;
-    LocalDB.artists.push(artist);
-    return artist;
+    return this.artistRepository.save(artist);
   }
 
-  update(id: string, updateArtistDto: UpdateArtistDto) {
-    const artist = this.findOne(id);
-    const index = LocalDB.artists.indexOf(artist);
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
+    const artist = await this.findOne(id);
     artist.name = updateArtistDto.name;
     artist.grammy = updateArtistDto.grammy;
-    LocalDB.artists[index] = artist;
-    return artist;
+    return await this.artistRepository.save(artist);
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     const artist = this.findOne(id);
     if (artist) {
-      LocalDB.artists = LocalDB.artists.filter((item) => item.id !== id);
-      LocalDB.tracks.forEach((track) => {
-        if (track.artistId === id) {
-          track.artistId = null;
-        }
-      });
+      this.artistRepository.delete(id);
     }
   }
 }

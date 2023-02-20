@@ -6,11 +6,16 @@ REST endpoints with separate router paths were created for Users, Artists, Album
 Service listens on PORT 4000 by default, PORT value is stored in .env file.
 https://github.com/ITboo/nodejs2022Q4-service/blob/a749285fd75d023a40922346fe88ed22124cb042/.env.example#L1
 
-
 ## Downloading
 
 ```
 git clone https://github.com/ITboo/nodejs2022Q4-service.git
+```
+
+## Change branch
+
+```
+cd nodejs2022Q4-service
 ```
 
 ## Installing NPM modules
@@ -18,6 +23,8 @@ git clone https://github.com/ITboo/nodejs2022Q4-service.git
 ```
 npm install
 ```
+
+## Rename .env.example file with .env
 
 ## Running application
 
@@ -39,15 +46,21 @@ To run only one of all test suites
 npm run test -- <path to suite>
 ```
 
-To run all test with authorization
+## Docker
 
 ```
-npm run test:auth
+npm run docker
 ```
-
-To run only specific test suite with authorization
+! If you have some errors bringing up the project after running Docker, you may try to clean cache by using
 
 ```
-npm run test:auth -- <path to suite>
+docker builder prune -a
 ```
+## Migrations
+There are some scripts to work with migrations:
 
+```
+migration:generate
+migration:create
+migration:run
+```
