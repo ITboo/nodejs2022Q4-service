@@ -6,7 +6,6 @@ REST endpoints with separate router paths were created for Users, Artists, Album
 Service listens on PORT 4000 by default, PORT value is stored in .env file.
 https://github.com/ITboo/nodejs2022Q4-service/blob/a749285fd75d023a40922346fe88ed22124cb042/.env.example#L1
 
-
 ## Downloading
 
 ```
@@ -56,4 +55,12 @@ npm run docker
 
 ```
 docker builder prune -a
+```
+## Migrations
+There are some scripts to work with migrations:
+
+```
+migration:generate
+migration:create
+migration:run
 ```
