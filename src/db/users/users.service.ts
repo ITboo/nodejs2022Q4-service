@@ -14,6 +14,8 @@ import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import * as bcrypt from 'bcrypt';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -34,11 +36,20 @@ export class UsersService {
     }
   }
 
+  async findByLogin(login: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { login } });
+    if (!user) {
+      throw new NotFoundException();
+    } else {
+      return user;
+    }
+  }
+
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User();
     user.id = uuid();
     user.login = createUserDto.login;
-    user.password = createUserDto.password;
+    user.password = await bcrypt.hash(createUserDto.password, 10);
     user.version = 1;
     user.createdAt = new Date().getTime();
     user.updatedAt = new Date().getTime();
