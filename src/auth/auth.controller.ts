@@ -13,18 +13,18 @@ export class AuthController {
   @Post('/signup')
   @HttpCode(HttpStatus.CREATED)
   async signUp(@Body() signUpDto: SignUpDto) {
-  //TODO
+    return this.authService.signUp(signUpDto);
   }
 
   @Post('/refresh')
   @HttpCode(HttpStatus.CREATED)
   async refresh(@Body() refreshDto: RefreshDto) {
-  //TODO
+    return this.authService.refresh(refreshDto);
   }
 
   @Post('/login')
   @HttpCode(HttpStatus.CREATED)
   async login(@Body() loginDto: LoginDto) {
-   //TODO
+    return this.authService.login(loginDto);
   }
 }

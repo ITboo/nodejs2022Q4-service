@@ -9,6 +9,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CONNECTION } from './db.connection';
 
+import { AuthModule } from 'src/auth/auth.module';
+
 @Module({
   imports: [
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -23,6 +25,7 @@ import { CONNECTION } from './db.connection';
     TracksModule,
     AlbumsModule,
     FavoritesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
