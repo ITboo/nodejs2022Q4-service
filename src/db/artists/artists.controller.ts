@@ -13,6 +13,7 @@ import {
   HttpException,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { validate } from 'uuid';
@@ -21,7 +22,10 @@ import { CreateArtistDto } from './dto/createArtist.dto';
 import { UpdateArtistDto } from './dto/updateArtist.dto';
 import { BAD_REQUEST } from 'src/common/error';
 
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+
 @Controller('artist')
+@UseGuards(AuthGuard)
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 

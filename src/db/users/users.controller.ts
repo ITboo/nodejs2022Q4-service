@@ -14,14 +14,18 @@ import {
   ValidationPipe,
   ClassSerializerInterceptor,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

@@ -12,6 +12,7 @@ import {
   HttpException,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { validate } from 'uuid';
@@ -20,7 +21,10 @@ import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
 import { BAD_REQUEST } from 'src/common/error';
 
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+
 @Controller('album')
+@UseGuards(AuthGuard)
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
 

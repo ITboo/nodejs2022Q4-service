@@ -13,6 +13,7 @@ import {
   HttpException,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { validate } from 'uuid';
@@ -21,7 +22,10 @@ import { CreateTrackDto } from './dto/createTrack.dto';
 import { UpdateTrackDto } from './dto/updateTrack.dto';
 import { BAD_REQUEST } from 'src/common/error';
 
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+
 @Controller('track')
+@UseGuards(AuthGuard)
 export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
