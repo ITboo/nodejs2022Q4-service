@@ -9,8 +9,23 @@ import { dirname, join } from 'path';
 import { readFile } from 'fs/promises';
 import { parse } from 'yaml';
 
+//logger
+//import { CustomLogger } from './logs/logger.service';
+
 dotenv.config();
 const PORT = process.env.port || 4000;
+
+/*const logger = new CustomLogger('app');
+process
+  .on('uncaughtException', (err) => {
+    logger.error(`Uncaught Exception: ${err}`);
+    process.exit(1);
+  })
+  .on('unhandledRejection', (reason, promise) => {
+    logger.error(`Unhandled Rejection at ${promise}. Reason: ${reason}`);
+    process.exit(1);
+  });*/
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

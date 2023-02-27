@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+
 import { UsersModule } from 'src/db/users/users.module';
 import { ArtistsModule } from 'src/db/artists/artists.module';
 import { TracksModule } from 'src/db/tracks/tracks.module';
@@ -10,6 +11,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CONNECTION } from './db.connection';
 
 import { AuthModule } from 'src/auth/auth.module';
+
+/*import { CustomLogger } from 'src/logs/logger.service';
+import { LoggerMiddleware } from 'src/logs/logger.middleware';*/
 
 @Module({
   imports: [
