@@ -6,3 +6,4 @@ export const ARTIST_NOT_FOUND = 'Artist not found';
 export const TRACK_NOT_FOUND = 'Track not found';
 export const ERR = 'Unprocessable entity';
 export const BAD_REQUEST = 'Bad request';
+export const ERR_TOKEN = 'Invalid token';

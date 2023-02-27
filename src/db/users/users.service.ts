@@ -15,6 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
+import { USER_NOT_FOUND } from 'src/common/error';
 
 @Injectable()
 export class UsersService {
@@ -30,7 +31,7 @@ export class UsersService {
   async findOne(id: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      throw new NotFoundException(HttpStatus.NOT_FOUND);
+      throw new NotFoundException(USER_NOT_FOUND);
     } else {
       return user;
     }
@@ -39,7 +40,7 @@ export class UsersService {
   async findByLogin(login: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { login } });
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException(USER_NOT_FOUND);
     } else {
       return user;
     }
@@ -60,15 +61,15 @@ export class UsersService {
   async update(id: string, updateDto: UpdatePasswordDto): Promise<User> {
     const user = await this.findOne(id);
     if (user) {
-      if (user.password != updateDto.oldPassword) {
+      if (!(await bcrypt.compare(updateDto.oldPassword, user.password))) {
         throw new HttpException('Error', HttpStatus.FORBIDDEN);
       }
       user.version++;
-      user.password = updateDto.newPassword;
+      user.password = await bcrypt.hash(updateDto.newPassword, 10);
       user.updatedAt = Date.now();
       return user;
     } else {
-      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      throw new HttpException(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
   }
 

@@ -1,7 +1,7 @@
 import {
   Injectable,
   ForbiddenException,
-  UnauthorizedException
+  UnauthorizedException,
 } from '@nestjs/common';
 
 import { User } from 'src/db/users/entities/user.entity';
@@ -25,33 +25,39 @@ export class AuthService {
     login: string,
     password: string,
   ): Promise<User | null> {
-    const user = await this.usersService.findOne();
+    const user = await this.usersService.findByLogin(login);
     if (user && (await bcrypt.compare(password, user.password))) {
       return user;
     }
     return null;
   }
 
-  private singTokens(payload: any) {
+  private signTokens(payload: any) {
     return {
       accessToken: this.jwtService.sign(
         { payload },
-        { secret: process.env.JWT_SECRET_KEY },
+        {
+          secret: process.env.JWT_SECRET_KEY,
+          expiresIn: process.env.TOKEN_EXPIRE_TIME,
+        },
       ),
       refreshToken: this.jwtService.sign(
         { payload },
-        { secret: process.env.JWT_SECRET_REFRESH_KEY },
+        {
+          secret: process.env.JWT_SECRET_REFRESH_KEY,
+          expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+        },
       ),
     };
   }
 
-  async verifyAccessToken() {
-    return this.jwtService.verifyAsync({
+  async verifyAccessToken(token) {
+    return this.jwtService.verifyAsync(token, {
       secret: process.env.JWT_SECRET_KEY,
     });
   }
-  async verifyRefreshToken() {
-    return this.jwtService.verifyAsync( {
+  async verifyRefreshToken(token) {
+    return this.jwtService.verifyAsync(token, {
       secret: process.env.JWT_SECRET_REFRESH_KEY,
     });
   }
@@ -67,7 +73,7 @@ export class AuthService {
     }
     try {
       const data = await this.verifyRefreshToken(refreshDto.refreshToken);
-      return this.singTokens(data.payload);
+      return this.signTokens(data.payload);
     } catch (err) {
       throw new ForbiddenException();
     }
@@ -80,7 +86,7 @@ export class AuthService {
       throw new ForbiddenException();
     } else {
       const payload = { login: user.login, userId: user.id };
-      return this.singTokens(payload);
+      return this.signTokens(payload);
     }
   }
 }
